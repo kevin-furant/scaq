@@ -46,6 +46,9 @@ task sample_aligner {
 
 workflow aligner_workflow {
     input {
+        File ref
+        String batch_name
+        String output_dir
         Array[String] samples
         Array[File] all_clean_r1
         Array[File] all_clean_r2
@@ -54,14 +57,16 @@ workflow aligner_workflow {
 
     Array[Pair[File, File]] pair_reads = zip(all_clean_r1, all_clean_r2)
     Array[Pair[String, Pair[File, File]]] sample_pair_reads = zip(samples, pair_reads)
+    Map[String, Pair[File, File]] sample_reads_map = as_map(sample_pair_reads)
     Array[Pair[String, Array[Int, Int]]] sample_gpu_groups = cross(samples, gpu_ids)
 
     scatter(sample in samples){
         call sample_aligner {
             input:
-                input_file = input_file,
-                input_string = input_string,
-                input_int = 1,
+                ref = ref,
+                clean_r1 = sample_reads_map[sample].left,
+                clean_r2 = sample_reads_map[sample].right,
+                sample_name = sample,
                 input_float = 0.0
         }
     }
