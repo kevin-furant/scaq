@@ -1,12 +1,10 @@
-import "global_config.wdl"
-    alias Config as Config
+version 1.1
 
-File fastp = Config.fastp
-File py = Config.py
-File fastp_stat = Config.fastp_stat
+import "global_config.wdl"
 
 task sample_qc {
     input {
+        Config cfg
         String sample_name
         File fq1
         File fq2
@@ -19,6 +17,8 @@ task sample_qc {
         cpu: 4
         backend: "Local"
     }
+    
+    File fastp = cfg.fastp
 
     command <<<
         #!/bin/bash
@@ -30,7 +30,7 @@ task sample_qc {
         ~{fastp} -i ~{fq1} -o ${clean_fq1} \
                 -I ~{fq2} -O ${clean_fq2} \
                 -j ${json_report} -h ${html_report} \
-                -w ~{cpu}
+                -w 4
     >>>
 
     output {
@@ -38,16 +38,21 @@ task sample_qc {
         File clean_fq2 = "~{output_dir}/~{batch_name}/01.qc/~{sample_name}_2.clean.fq.gz"
         File json = "~{output_dir}/~{batch_name}/01.qc/~{sample_name}.json"
         File html = "~{output_dir}/~{batch_name}/01.qc/~{sample_name}.html"
+        String sample = sample_name
     }
 }
 
 task qc_stat {
-    inputs {
+    input {
+        Config cfg
         String sample_name
         String batch_name
         String output_dir
         File json_report
     }
+
+    File py = cfg.py
+    File fastp_stat = cfg.fastp_stat
 
     runtime {
         cpu: 1
@@ -58,31 +63,33 @@ task qc_stat {
         #!/bin/bash
         ~{py} ~{fastp_stat} \
             --fastp-json ~{json_report} \
-            --outdir ~{output_dir}/~{batch_name} \
+            --outdir ~{output_dir}/~{batch_name}/01.qc \
             --samplename ~{sample_name}
     >>>
 
     output {
-        File summary_file = ~{output_dir}/~{batch}/01.qc/~{sample_name}.summary
+        File summary_file = "~{output_dir}/~{batch_name}/01.qc/~{sample_name}.summary"
     }
 }
 
 workflow qc_workflow {
     input {
+        Config cfg
         File sample_info
         String input_dir
         String output_dir
         String batch_name 
     }
-    #sample\tr1\tr2
-    Array[Object] sample_info_objs = read_objects(sample_info)
-    scatter(sample_obj in sample_info_objs){
-        String sample = sample_obj.sample
-        File fq1 = sample_obj.r1
-        File fq2 = sample_obj.r2
+    #read_objects cromwell未实现，用read_json 代替
+    Map[String, Array[File]] sample_info_map = read_json(sample_info)
+    Array[String] samples = keys(sample_info_map)
+    scatter(sample in samples){
+        File fq1 = sample_info_map[sample][0]
+        File fq2 = sample_info_map[sample][1]
         call sample_qc {
             input:
-                sample_name = sample_name,
+                cfg = cfg,
+                sample_name = sample,
                 fq1 = fq1,
                 fq2 = fq2,
                 input_dir = input_dir,
@@ -92,16 +99,17 @@ workflow qc_workflow {
 
         call qc_stat {
             input:
-                sample_name = sample_name,
+                cfg = cfg,
+                sample_name = sample,
                 batch_name = batch_name,
                 output_dir = output_dir,
-                json_report = sample_qc.summary_file
+                json_report = sample_qc.json
         }
     }
 
     output {
         Array[File] summary_files = qc_stat.summary_file
-        Array[String] samples = sample_qc.sample_name
+        Array[String] sample_names = sample_qc.sample
         Array[File] all_clean_r1 = sample_qc.clean_fq1
         Array[File] all_clean_r2 = sample_qc.clean_fq2
     }
