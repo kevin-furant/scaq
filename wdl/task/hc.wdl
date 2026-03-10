@@ -12,7 +12,7 @@ task sample_hc {
 
     runtime {
         backend: "Local"
-        container: "parabricks.4.3"
+        container: "parabricks.4.3.sif"
     }
 
     command <<<

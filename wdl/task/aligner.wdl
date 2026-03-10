@@ -18,7 +18,7 @@ task sample_aligner {
 
     runtime {
         backend: "Local"
-        container: "parabricks.4.6"
+        container: "parabricks.4.6.sif"
     }
 
     command <<<
