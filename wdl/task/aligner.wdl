@@ -5,7 +5,6 @@ import "global_config.wdl"
 task sample_aligner {
     input {
         Config cfg
-        File ref
         File clean_r1
         File clean_r2
         String sample_name
@@ -14,6 +13,7 @@ task sample_aligner {
         Array[Int] gpu_group
     }
 
+    File ref = cfg.ref
     File samtools = cfg.samtools
 
     runtime {
@@ -48,7 +48,6 @@ task sample_aligner {
 workflow aligner_workflow {
     input {
         Config cfg
-        File ref
         File? sample_info
         String batch_name
         String output_dir
@@ -71,7 +70,6 @@ workflow aligner_workflow {
             call sample_aligner as flow_sample_aligner {
                 input:
                     cfg = cfg,
-                    ref = ref,
                     clean_r1 = sample_reads_map[sample].left,
                     clean_r2 = sample_reads_map[sample].right,
                     sample_name = sample,
@@ -93,7 +91,6 @@ workflow aligner_workflow {
             call sample_aligner as start_sample_aligner {
                 input:
                     cfg = cfg,
-                    ref = ref,
                     clean_r1 = sample_info_map[sample][0],
                     clean_r2 = sample_info_map[sample][1],
                     batch_name = batch_name,
