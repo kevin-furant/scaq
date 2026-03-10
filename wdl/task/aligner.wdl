@@ -38,6 +38,7 @@ task sample_aligner {
     >>>
 
     output {
+        String sample = sample_name
         File out_bam = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam"
         File out_bai = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.bai"
         File bam_stat = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat"
@@ -91,6 +92,7 @@ workflow aligner_workflow {
             call sample_aligner as start_sample_aligner {
                 input:
                     cfg = cfg,
+                    sample_name = sample,
                     clean_r1 = sample_info_map[sample][0],
                     clean_r2 = sample_info_map[sample][1],
                     batch_name = batch_name,
@@ -104,5 +106,6 @@ workflow aligner_workflow {
         Array[File]? all_bams = if (defined(sample_info)) then start_sample_aligner.out_bam else flow_sample_aligner.out_bam
         Array[File]? all_bais = if (defined(sample_info)) then start_sample_aligner.out_bai else flow_sample_aligner.out_bai
         Array[File]? all_bam_stats = if (defined(sample_info)) then start_sample_aligner.bam_stat else flow_sample_aligner.bam_stat
+        Array[String]? sample_names = if (defined(sample_info)) then key_samples else samples_selected
     }
 }

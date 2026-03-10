@@ -52,9 +52,9 @@ workflow hc_workflow {
     }
 
     if (defined(sample_info)){
-        #如果只做hc,那就得提供数据路径信息json 文件格式 sample\tbam_path
+        #如果只做hc,那就得提供数据路径信息json 文件格式 sample\tbam_path\tbai_path
         File sample_info_file = select_first([sample_info])
-        Map[String, File] sample_info_map = read_json(sample_info_file)
+        Map[String, Array[File]] sample_info_map = read_json(sample_info_file)
         Array[String] samples = keys(sample_info_map)
         Map[String, Array[Int]] sample_gpu_groups_1 = as_map(cross(samples, gpu_ids))
         scatter(sample in samples){
@@ -62,7 +62,8 @@ workflow hc_workflow {
                 input:
                     cfg = cfg,
                     sample_name = sample,
-                    input_bam = sample_info_map[sample],
+                    input_bam = sample_info_map[sample][0],
+                    input_bai = sample_info_map[sample][1],
                     output_dir = output_dir,
                     batch_name = batch_name,
                     gpu_group = sample_gpu_groups_1[sample]

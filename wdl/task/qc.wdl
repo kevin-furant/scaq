@@ -8,7 +8,6 @@ task sample_qc {
         String sample_name
         File fq1
         File fq2
-        String input_dir
         String output_dir
         String batch_name
     }
@@ -76,7 +75,6 @@ workflow qc_workflow {
     input {
         Config cfg
         File sample_info
-        String input_dir
         String output_dir
         String batch_name 
     }
@@ -92,7 +90,6 @@ workflow qc_workflow {
                 sample_name = sample,
                 fq1 = fq1,
                 fq2 = fq2,
-                input_dir = input_dir,
                 output_dir = output_dir,
                 batch_name = batch_name
         }
