@@ -1,0 +1,36 @@
+{
+  "QCpipeline.is_hc": "Boolean",
+  "QCpipeline.start_hc_workflow.all_bais": "Array[File]? (optional)",
+  "QCpipeline.is_qc": "Boolean",
+  "QCpipeline.start_hc_workflow.all_bams": "Array[File]? (optional)",
+  "QCpipeline.batch_name": "String",
+  "QCpipeline.start_aligner_workflow.all_clean_r2": "Array[File]? (optional)",
+  "QCpipeline.hc_sample_info": "File? (optional)",
+  "QCpipeline.is_align": "Boolean",
+  "QCpipeline.align_sample_info": "File? (optional)",
+  "QCpipeline.start_hc_workflow.input_samples": "Array[String]? (optional)",
+  "QCpipeline.qc_sample_info": "File? (optional)",
+  "QCpipeline.gpu_ids": "Array[Array[Int]]",
+  "QCpipeline.flow_hc_workflow.sample_info": "File? (optional)",
+  "QCpipeline.start_aligner_workflow.all_clean_r1": "Array[File]? (optional)",
+  "QCpipeline.flow_hc_workflow_2.sample_info": "File? (optional)",
+  "QCpipeline.start_aligner_workflow.samples": "Array[String]? (optional)",
+  "QCpipeline.cfg": {
+    "snp_stat": "File",
+    "bgzip": "File",
+    "ref": "File",
+    "samtools": "File",
+    "fastp_stat": "File",
+    "bcftools": "File",
+    "fastp": "File",
+    "Rscript": "File",
+    "popSNP_SNPStat": "File",
+    "chr_list": "File",
+    "parallel": "File",
+    "fai": "File",
+    "py": "File"
+  },
+  "QCpipeline.flow_aligner_workflow.sample_info": "File? (optional)",
+  "QCpipeline.output_dir": "String"
+}
+
