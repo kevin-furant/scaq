@@ -17,7 +17,7 @@ def get_config_dict(config_json: Path | str) -> Dict[str, Path] | None:
                 config_dict[key] = Path(value)
             except TypeError as err:
                 raise ValueError(f"字段 {key} 的值 {value} 无法转换为 Path 类型")
-            return config_dict
+    return config_dict
         
 if __name__ == "__main__":
     config_json = Path(__file__).parent / "config.json"
