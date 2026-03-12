@@ -71,13 +71,13 @@ class SampleInfoOverride(StrictBaseModel):
 
 class InputSourceModel(StrictBaseModel):
     batch_name: str
-    output_dir: str
+    output_dir: Path
     is_qc: bool
     is_align: bool
     is_hc: bool
-    qc_sample_info: SampleInfoOverride | None = None
-    align_sample_info: SampleInfoOverride | None = None
-    hc_sample_info: SampleInfoOverride | None = None
+    qc_sample_info: Path | None = None
+    align_sample_info: Path | None = None
+    hc_sample_info: Path | None = None
     gpu_ids: list[list[int]] = [[0, 1], [2, 3], [4, 5]]
     cfg: ConfigModel
 
@@ -148,7 +148,7 @@ def args_init() -> argparse.Namespace:
     parser.add_argument(
         "--outdir",
         dest="outdir",
-        type=Path,
+        type=str,
         default=None,
         help="分析输出的项目路径地址"
     )
