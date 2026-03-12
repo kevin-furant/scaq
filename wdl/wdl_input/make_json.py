@@ -173,7 +173,7 @@ def args_init() -> argparse.Namespace:
     )
     parser.add_argument(
         "--is-hc",
-        dest="is_hc"
+        dest="is_hc",
         help="是否是从hc开始执行流程",
         action="store_true"
     )
