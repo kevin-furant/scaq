@@ -34,7 +34,7 @@ task sample_aligner {
             --num-gpus 2
         #samtools stat
         samtools stat --coverage 1,30,1 -@ 20 \
-            ~{output_dir}/02.bam/~{sample_name}.bam > ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat
+            ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam > ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat
     >>>
 
     output {

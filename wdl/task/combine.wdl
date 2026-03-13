@@ -19,7 +19,7 @@ task GLnexus {
 
     command <<<
         #!/bin/bash
-        mkdir -p ~{output_dir}/04.combine
+        mkdir -p ~{output_dir}/~{batch_name}/04.combine
         cp ~{gvcf_list} ~{output_dir}/~{batch_name}/04.combine/gvcf.list
         echo 'GLnexus analysis start'
         glnexus_cli --dir /tempdir/GLnexus.DB \
