@@ -16,6 +16,7 @@ task sample_hc {
     File ref = cfg.ref
 
     runtime {
+        cpu: 8
         docker: "parabricks.4.3.sif"
     }
 

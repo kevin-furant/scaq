@@ -13,7 +13,7 @@ task sample_qc {
     }
 
     runtime {
-        cpu: 4
+        cpu: 2
     }
     
     File fastp = cfg.fastp

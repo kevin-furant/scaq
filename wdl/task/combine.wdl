@@ -13,6 +13,7 @@ task GLnexus {
     File gvcf_list = write_lines(all_vcfs)
 
     runtime {
+        cpu: 2
         docker: "glnexus_v1.4.1.sif"
     }
 
@@ -53,7 +54,7 @@ task combine_gvcfs {
     File popSNP_SNPStat = cfg.popSNP_SNPStat
 
     runtime {
-        cpu: 1
+        cpu: 2
     }
 
     command <<<

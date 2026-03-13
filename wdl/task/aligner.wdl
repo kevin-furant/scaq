@@ -17,6 +17,7 @@ task sample_aligner {
     File samtools = cfg.samtools
 
     runtime {
+        cpu: 8
         docker: "parabricks.4.6.sif"
     }
 
