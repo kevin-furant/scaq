@@ -18,7 +18,7 @@ task sample_aligner {
 
     runtime {
         cpu: 8
-        docker: "parabricks.4.6.sif"
+        image: "parabricks.4.6.sif"
     }
 
     command <<<

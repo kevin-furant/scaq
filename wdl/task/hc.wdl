@@ -17,7 +17,7 @@ task sample_hc {
 
     runtime {
         cpu: 8
-        docker: "parabricks.4.3.sif"
+        image: "parabricks.4.3.sif"
     }
 
     command <<<

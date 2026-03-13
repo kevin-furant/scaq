@@ -14,7 +14,7 @@ task GLnexus {
 
     runtime {
         cpu: 2
-        docker: "glnexus_v1.4.1.sif"
+        image: "glnexus_v1.4.1.sif"
     }
 
     command <<<
