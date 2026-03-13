@@ -61,7 +61,7 @@ task combine_gvcfs {
         #!/bin/bash
         mkdir -p ~{output_dir}/~{batch_name}/04.combine
         echo 'get rawSNP vcf result'
-        \time -v ~{bcftools} view -V indels --threads 40 ~{input_bcf_file} | ~{bgzip} -@ 40 -c > ~{output_dir}/~{batch_name}/~{batch_name}_CombineGVCFs_GenotypeGVCFs.rawSNP.pre.vcf.gz
+        \time -v ~{bcftools} view -V indels --threads 40 ~{input_bcf_file} | ~{bgzip} -@ 40 -c > ~{output_dir}/~{batch_name}/04.combine/~{batch_name}_CombineGVCFs_GenotypeGVCFs.rawSNP.pre.vcf.gz
         echo 'rawSNP vcf result step is finished!'
 
         echo 'get rawInDel vcf result'
