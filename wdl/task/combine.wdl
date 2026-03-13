@@ -14,7 +14,7 @@ task GLnexus {
 
     runtime {
         backend: "Local"
-        container: "glnexus_v1.4.1.sif"
+        singularity: "glnexus_v1.4.1.sif"
     }
 
     command <<<
