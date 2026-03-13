@@ -56,17 +56,18 @@ workflow hc_workflow {
         File sample_info_file = select_first([sample_info])
         Map[String, Array[File]] sample_info_map = read_json(sample_info_file)
         Array[String] samples = keys(sample_info_map)
-        Map[String, Array[Int]] sample_gpu_groups_1 = as_map(cross(samples, gpu_ids))
-        scatter(sample in samples){
+        scatter(sample_idx in range(length(samples))){
+            String sample_1 = samples[sample_idx]
+            Int gpu_idx_1 = sample_idx - (length(gpu_ids) * floor((sample_idx + 0.0) / length(gpu_ids)))
             call sample_hc as start_sample_hc {
                 input:
                     cfg = cfg,
-                    sample_name = sample,
-                    input_bam = sample_info_map[sample][0],
-                    input_bai = sample_info_map[sample][1],
+                    sample_name = sample_1,
+                    input_bam = sample_info_map[sample_1][0],
+                    input_bai = sample_info_map[sample_1][1],
                     output_dir = output_dir,
                     batch_name = batch_name,
-                    gpu_group = sample_gpu_groups_1[sample]
+                    gpu_group = gpu_ids[gpu_idx_1]
             }
         }
     }
@@ -77,17 +78,18 @@ workflow hc_workflow {
         Array[File] all_bais_selected = select_first([all_bais])
         Map[String, File] sample_bam_map = as_map(zip(input_samples_selected, all_bams_selected))
         Map[String, File] sample_bai_map = as_map(zip(input_samples_selected, all_bais_selected))
-        Map[String, Array[Int]] sample_gpu_groups_2 = as_map(cross(input_samples_selected, gpu_ids))
-        scatter(sample in input_samples_selected){
+        scatter(sample_idx in range(length(input_samples_selected))){
+            String sample_2 = input_samples_selected[sample_idx]
+            Int gpu_idx_2 = sample_idx - (length(gpu_ids) * floor((sample_idx + 0.0) / length(gpu_ids)))
             call sample_hc as flow_sample_hc {
                 input:
                     cfg = cfg,
-                    sample_name = sample,
-                    input_bam = sample_bam_map[sample],
-                    input_bai = sample_bai_map[sample],
+                    sample_name = sample_2,
+                    input_bam = sample_bam_map[sample_2],
+                    input_bai = sample_bai_map[sample_2],
                     output_dir = output_dir,
                     batch_name = batch_name,
-                    gpu_group = sample_gpu_groups_2[sample]
+                    gpu_group = gpu_ids[gpu_idx_2]
             }
         }
     }
