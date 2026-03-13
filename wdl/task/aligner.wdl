@@ -19,6 +19,7 @@ task sample_aligner {
     runtime {
         cpu: 8
         image: "parabricks.4.6.sif"
+        cuda_visible_devices: sep(",", gpu_group)
     }
 
     command <<<
