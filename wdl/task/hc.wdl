@@ -80,7 +80,7 @@ task sample_hc {
             --in-bam ~{input_bam} \
             --out-variants ~{output_dir}/~{batch_name}/03.vcf/~{sample_name}.HP.g.vcf.gz \
             --gvcf \
-            -num-gpus "${NUM_GPUS}"
+            --num-gpus "${NUM_GPUS}"
     >>>
 
     output {
