@@ -17,13 +17,12 @@ task sample_aligner {
     File samtools = cfg.samtools
 
     runtime {
-        backend: "Local"
-        singularity: "parabricks.4.6.sif"
+        docker: "parabricks.4.6.sif"
     }
 
     command <<<
         #!/bin/bash
-        export SINGULARITYENV_CUDA_VISIBLE_DEVICES=~{sep=',' gpu_group}
+        export SINGULARITYENV_CUDA_VISIBLE_DEVICES="~{sep=',' gpu_group}"
         mkdir -p ~{output_dir}/~{batch_name}/02.bam
         #fq2bam
         pbrun fq2bam \

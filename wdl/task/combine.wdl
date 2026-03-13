@@ -13,8 +13,7 @@ task GLnexus {
     File gvcf_list = write_lines(all_vcfs)
 
     runtime {
-        backend: "Local"
-        singularity: "glnexus_v1.4.1.sif"
+        docker: "glnexus_v1.4.1.sif"
     }
 
     command <<<
@@ -54,7 +53,7 @@ task combine_gvcfs {
     File popSNP_SNPStat = cfg.popSNP_SNPStat
 
     runtime {
-        backend: "Local"
+        cpu: 1
     }
 
     command <<<

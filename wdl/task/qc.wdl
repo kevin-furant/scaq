@@ -14,7 +14,6 @@ task sample_qc {
 
     runtime {
         cpu: 4
-        backend: "Local"
     }
     
     File fastp = cfg.fastp
@@ -55,7 +54,6 @@ task qc_stat {
 
     runtime {
         cpu: 1
-        backend: "Local"
     }
 
     command <<<

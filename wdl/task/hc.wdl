@@ -16,13 +16,12 @@ task sample_hc {
     File ref = cfg.ref
 
     runtime {
-        backend: "Local"
-        singularity: "parabricks.4.3.sif"
+        docker: "parabricks.4.3.sif"
     }
 
     command <<<
         #!/bin/bash
-        export SINGULARITYENV_CUDA_VISIBLE_DEVICES=~{sep=',' gpu_group}
+        export SINGULARITYENV_CUDA_VISIBLE_DEVICES="~{sep=',' gpu_group}"
         mkdir -p ~{output_dir}/~{batch_name}/03.vcf
 
         pbrun haplotypecaller \
