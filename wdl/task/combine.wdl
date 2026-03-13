@@ -22,11 +22,11 @@ task GLnexus {
         mkdir -p ~{output_dir}/~{batch_name}/04.combine
         cp ~{gvcf_list} ~{output_dir}/~{batch_name}/04.combine/gvcf.list
         echo 'GLnexus analysis start'
-        glnexus_cli --dir /tempdir/GLnexus.DB \
+        glnexus_cli --dir ~{output_dir}/~{batch_name}/04.combine/tempdir/GLnexus.DB \
             --config gatk \
             --threads 80 \
             --list ~{gvcf_list} > ~{output_dir}/~{batch_name}/04.combine/~{batch_name}_GenotypeGVCFs.g.bcf
-        rm -rf ~{output_dir}/~{batch_name}/04.combine/tmp
+        rm -rf ~{output_dir}/~{batch_name}/04.combine/tempdir
         echo 'GLnexus analysis end'
     >>>
 
