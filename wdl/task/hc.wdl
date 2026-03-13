@@ -18,7 +18,7 @@ task sample_hc {
     runtime {
         cpu: 8
         image: "parabricks.4.3.sif"
-        cuda_visible_devices: sep(",", gpu_group)
+        cuda_visible_devices: sep("," gpu_group)
     }
 
     command <<<
