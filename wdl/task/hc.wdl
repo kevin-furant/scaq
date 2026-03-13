@@ -22,7 +22,35 @@ task sample_hc {
 
     command <<<
         #!/bin/bash
-        export SINGULARITYENV_CUDA_VISIBLE_DEVICES="~{sep=',' gpu_group}"
+        set -euo pipefail
+        GPU_CSV="~{sep=',' gpu_group}"
+        export SINGULARITYENV_CUDA_VISIBLE_DEVICES="${GPU_CSV}"
+
+        # Block until all target GPUs have no running compute process.
+        wait_for_gpus_idle() {
+            local gpu_csv="$1"
+            local sleep_seconds="${2:-10}"
+            IFS=',' read -r -a gpu_ids <<< "${gpu_csv}"
+            while true; do
+                local busy=0
+                for gpu_id in "${gpu_ids[@]}"; do
+                    local running_pids
+                    running_pids="$(nvidia-smi --id="${gpu_id}" --query-compute-apps=pid --format=csv,noheader,nounits 2>/dev/null | awk '/^[0-9]+$/ {print}')"
+                    if [[ -n "${running_pids}" ]]; then
+                        busy=1
+                        break
+                    fi
+                done
+                if [[ "${busy}" -eq 0 ]]; then
+                    echo "GPUs [${gpu_csv}] are idle. Start task."
+                    return 0
+                fi
+                echo "GPUs [${gpu_csv}] are busy. Sleep ${sleep_seconds}s..."
+                sleep "${sleep_seconds}"
+            done
+        }
+
+        wait_for_gpus_idle "${GPU_CSV}" 10
         mkdir -p ~{output_dir}/~{batch_name}/03.vcf
 
         pbrun haplotypecaller \
