@@ -1,29 +1,139 @@
+<!DOCTYPE html>
 <html>
+
+<head>
+<meta charset="utf-8">
+<title>任务数据管理系统</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+background:#f5f5f5;
+}
+
+h1{
+color:#333;
+}
+
+.panel{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:8px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+button{
+padding:6px 14px;
+margin:5px;
+cursor:pointer;
+}
+
+table{
+border-collapse:collapse;
+width:100%;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:8px;
+text-align:left;
+}
+
+th{
+background:#eee;
+}
+
+#status{
+color:green;
+}
+
+</style>
+
+</head>
+
+
 <body>
 
-<h2>上传Excel/TXT</h2>
+<h1>任务数据管理系统</h1>
+
+<div class="panel">
+
+<h3>上传任务文件</h3>
 
 <input type="file" id="file">
 
 <button onclick="upload()">上传</button>
 
-<hr>
+<p id="uploadStatus"></p>
 
-<h2>查询</h2>
+</div>
+
+
+<div class="panel">
+
+<h3>查询任务</h3>
 
 开始时间
-<input id="start">
+<input type="datetime-local" id="start">
 
 结束时间
-<input id="end">
+<input type="datetime-local" id="end">
+
+批次
+<input id="batch">
 
 <button onclick="query()">查询</button>
 
 <button onclick="download()">下载Excel</button>
 
-<pre id="result"></pre>
+</div>
+
+
+<div class="panel">
+
+<h3>查询结果</h3>
+
+<table id="table">
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>时间</th>
+<th>批次</th>
+<th>样本</th>
+<th>路径</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+<div>
+
+<button onclick="prevPage()">上一页</button>
+
+<span id="pageInfo"></span>
+
+<button onclick="nextPage()">下一页</button>
+
+</div>
+
+</div>
+
 
 <script>
+
+let page=1
+let size=20
+let total=0
+
 
 function upload(){
 
@@ -37,32 +147,118 @@ fetch("/upload",{
 method:"POST",
 body:form
 })
-
-}
-
-function query(){
-
-let s=document.getElementById("start").value
-let e=document.getElementById("end").value
-
-fetch(`/query?start_time=${s}&end_time=${e}`)
 .then(r=>r.json())
 .then(d=>{
-document.getElementById("result").innerText=JSON.stringify(d,null,2)
+document.getElementById("uploadStatus").innerText="上传成功"
 })
 
 }
 
+
+
+function query(){
+
+page=1
+
+loadData()
+
+}
+
+
+
+function loadData(){
+
+let start=document.getElementById("start").value
+let end=document.getElementById("end").value
+let batch=document.getElementById("batch").value
+
+let url=`/query?start_time=${start}&end_time=${end}&page=${page}&size=${size}`
+
+if(batch){
+url+=`&batch_name=${batch}`
+}
+
+fetch(url)
+.then(r=>r.json())
+.then(data=>{
+
+total=data.total
+
+renderTable(data.data)
+
+document.getElementById("pageInfo").innerText=
+`第 ${page} 页 / 共 ${Math.ceil(total/size)} 页`
+
+})
+
+}
+
+
+
+function renderTable(data){
+
+let tbody=document.querySelector("#table tbody")
+
+tbody.innerHTML=""
+
+data.forEach(row=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=`
+<td>${row.id}</td>
+<td>${row.time}</td>
+<td>${row.batch_name}</td>
+<td>${row.sample_name}</td>
+<td>${row.data_path}</td>
+`
+
+tbody.appendChild(tr)
+
+})
+
+}
+
+
+
+function nextPage(){
+
+if(page*size<total){
+
+page++
+
+loadData()
+
+}
+
+}
+
+
+function prevPage(){
+
+if(page>1){
+
+page--
+
+loadData()
+
+}
+
+}
+
+
+
 function download(){
 
-let s=document.getElementById("start").value
-let e=document.getElementById("end").value
+let start=document.getElementById("start").value
+let end=document.getElementById("end").value
 
-window.location=`/download?start_time=${s}&end_time=${e}`
+window.location=`/download?start_time=${start}&end_time=${end}`
 
 }
 
 </script>
+
 
 </body>
 </html>
