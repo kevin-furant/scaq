@@ -71,7 +71,7 @@ class SampleInfoOverride(StrictBaseModel):
 
 class InputSourceModel(StrictBaseModel):
     batch_name: str
-    output_dir: Path
+    output_dir: str
     is_qc: bool
     is_align: bool
     is_hc: bool
