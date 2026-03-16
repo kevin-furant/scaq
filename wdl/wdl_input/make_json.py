@@ -160,6 +160,13 @@ def args_init() -> argparse.Namespace:
         help="分析的批次名"
     )
     parser.add_argument(
+        "--config",
+        dest="config",
+        type=str,
+        default="config.json",
+        help="配置流程输入额外的软件及步骤必须文件"
+    )
+    parser.add_argument(
         "--is-qc",
         dest="is_qc",
         help="是否是从qc开始执行流程",

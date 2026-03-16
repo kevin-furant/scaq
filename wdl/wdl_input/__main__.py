@@ -20,8 +20,9 @@ def get_config_dict(config_json: Path | str) -> Dict[str, Path] | None:
     return config_dict
         
 if __name__ == "__main__":
-    config_json = Path(__file__).parent / "config.json"
+    # config_json = Path(__file__).parent / "config.json"
     args = args_init()
+    config_json = Path(args.config)
     if args.example:
         print(json.dumps(EXAMPLE_INPUT_JSON, ensure_ascii=False, indent=2))
         sys.exit(0)
