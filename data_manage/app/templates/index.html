@@ -1,0 +1,68 @@
+<html>
+<body>
+
+<h2>上传Excel/TXT</h2>
+
+<input type="file" id="file">
+
+<button onclick="upload()">上传</button>
+
+<hr>
+
+<h2>查询</h2>
+
+开始时间
+<input id="start">
+
+结束时间
+<input id="end">
+
+<button onclick="query()">查询</button>
+
+<button onclick="download()">下载Excel</button>
+
+<pre id="result"></pre>
+
+<script>
+
+function upload(){
+
+let file=document.getElementById("file").files[0]
+
+let form=new FormData()
+
+form.append("file",file)
+
+fetch("/upload",{
+method:"POST",
+body:form
+})
+
+}
+
+function query(){
+
+let s=document.getElementById("start").value
+let e=document.getElementById("end").value
+
+fetch(`/query?start_time=${s}&end_time=${e}`)
+.then(r=>r.json())
+.then(d=>{
+document.getElementById("result").innerText=JSON.stringify(d,null,2)
+})
+
+}
+
+function download(){
+
+let s=document.getElementById("start").value
+let e=document.getElementById("end").value
+
+window.location=`/download?start_time=${s}&end_time=${e}`
+
+}
+
+</script>
+
+</body>
+</html>

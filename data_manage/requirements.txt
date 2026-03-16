@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+pymysql
+pandas
+openpyxl
+python-multipart
+jinja2
+pydantic
+loguru
