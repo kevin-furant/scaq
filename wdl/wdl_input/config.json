@@ -1,0 +1,15 @@
+{
+    "snp_stat": null,
+    "bgzip": null,
+    "ref": null,
+    "samtools": null,
+    "fastp_stat": null,
+    "bcftools": null,
+    "fastp": null,
+    "Rscript": null,
+    "popSNP_SNPStat": null,
+    "chr_list": null,
+    "parallel": null,
+    "fai": null,
+    "py": null
+}
