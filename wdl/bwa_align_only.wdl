@@ -34,7 +34,7 @@ task align_only {
 
     output {
         File out_bam = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam"
-        File out_bai = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.bai"
+        #File out_bai = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.bai"
     }
 }
 
@@ -66,6 +66,6 @@ workflow align_only_wf {
 
     output {
         Array[File] all_bams = align_only.out_bam 
-        Array[File] all_bais = align_only.out_bai 
+        #Array[File] all_bais = align_only.out_bai 
     }
 }
