@@ -20,6 +20,8 @@ task align_only {
     command <<<
         #!/bin/bash
         set -euo pipefail
+        GPU_CSV="~{sep=',' gpu_group}"
+        NUM_GPUS="$(awk -F',' '{print NF}' <<< "${GPU_CSV}")"
         mkdir -p ~{output_dir}/~{batch_name}/02.bam
         #fq2bam
         pbrun fq2bam \
