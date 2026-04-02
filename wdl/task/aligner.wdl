@@ -36,8 +36,8 @@ task sample_aligner {
             --out-bam ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam \
             --num-gpus "${NUM_GPUS}"
         #samtools stat
-        samtools stat --coverage 1,30,1 -@ 20 \
-            ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam > ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat
+        # samtools stat --coverage 1,30,1 -@ 20 \
+        #     ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam > ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat
     >>>
 
     output {
@@ -48,6 +48,35 @@ task sample_aligner {
     }
 }
 
+task bam_stat {
+    input {
+        Config cfg
+        File input_bam
+        File input_bai
+        String sample_name
+        String output_dir
+        String batch_name
+    }
+
+    File samtools = cfg.samtools
+
+    runtime {
+        cpu: 8
+    }
+
+    command <<<
+        #!/bin/bash
+        set -euo pipefail
+        mkdir -p ~{output_dir}/~{batch_name}/02.bam
+        #samtools stat 
+        ~{samtools} stat --coverage 1,30,1 -@ 20 \
+            ~{input_bam} > ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat
+    >>>
+
+    output {
+        File bam_stat = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat"
+    }
+}
 
 workflow aligner_workflow {
     input {
@@ -83,6 +112,16 @@ workflow aligner_workflow {
                     # Rotate GPU groups when sample count exceeds gpu_ids count.
                     gpu_group = gpu_ids[gpu_idx_1]
             }
+
+            call bam_stat as flow_bam_stat {
+                input:
+                    cfg = cfg,
+                    input_bam = flow_sample_aligner.out_bam,
+                    input_bai = flow_sample_aligner.out_bai,
+                    sample_name = sample_1,
+                    batch_name = batch_name,
+                    output_dir = output_dir
+            }
         }
     }
 
@@ -105,6 +144,16 @@ workflow aligner_workflow {
                     output_dir = output_dir,
                     # Rotate GPU groups when sample count exceeds gpu_ids count.
                     gpu_group = gpu_ids[gpu_idx_2]
+            }
+
+            call bam_stat as start_bam_stat {
+                input:
+                    cfg = cfg,
+                    input_bam = start_sample_aligner.out_bam,
+                    input_bai = start_sample_aligner.out_bai,
+                    sample_name = sample_2,
+                    batch_name = batch_name,
+                    output_dir = output_dir
             }
         }
     }
