@@ -27,54 +27,6 @@ task sample_aligner {
         set -euo pipefail
         GPU_CSV="~{sep=',' gpu_group}"
         NUM_GPUS="$(awk -F',' '{print NF}' <<< "${GPU_CSV}")"
-        MIN_FREE_PERCENT="${MIN_FREE_PERCENT:-90}"
-        LOCK_ROOT="/tmp/cromwell-gpu-locks"
-        LOCK_FILE="${LOCK_ROOT}/$(tr ',' '_' <<< "${GPU_CSV}").lock"
-        export SINGULARITYENV_CUDA_VISIBLE_DEVICES="${GPU_CSV}"
-
-        # Serialize jobs mapped to same GPU group to avoid check-then-run race.
-        mkdir -p "${LOCK_ROOT}"
-        exec 9>"${LOCK_FILE}"
-        flock 9
-
-        # Wait until target GPUs have no active compute process and enough free VRAM.
-        wait_for_gpus_ready() {
-            local gpu_csv="$1"
-            local sleep_seconds="${2:-10}"
-            IFS=',' read -r -a gpu_ids <<< "${gpu_csv}"
-            while true; do
-                local busy=0
-                for gpu_id in "${gpu_ids[@]}"; do
-                    local running_pids
-                    running_pids="$(nvidia-smi --id="${gpu_id}" --query-compute-apps=pid --format=csv,noheader,nounits 2>/dev/null | awk '/^[0-9]+$/ {print}')"
-                    if [[ -n "${running_pids}" ]]; then
-                        busy=1
-                        break
-                    fi
-                    local mem_pair free_mem total_mem free_percent
-                    mem_pair="$(nvidia-smi --id="${gpu_id}" --query-gpu=memory.free,memory.total --format=csv,noheader,nounits 2>/dev/null | head -n 1)"
-                    free_mem="$(awk -F',' '{gsub(/ /, "", $1); print $1}' <<< "${mem_pair}")"
-                    total_mem="$(awk -F',' '{gsub(/ /, "", $2); print $2}' <<< "${mem_pair}")"
-                    if [[ -z "${free_mem}" || -z "${total_mem}" || "${total_mem}" -eq 0 ]]; then
-                        busy=1
-                        break
-                    fi
-                    free_percent=$((100 * free_mem / total_mem))
-                    if [[ "${free_percent}" -lt "${MIN_FREE_PERCENT}" ]]; then
-                        busy=1
-                        break
-                    fi
-                done
-                if [[ "${busy}" -eq 0 ]]; then
-                    echo "GPUs [${gpu_csv}] are ready (>=${MIN_FREE_PERCENT}% free VRAM). Start task."
-                    return 0
-                fi
-                echo "GPUs [${gpu_csv}] are busy or low VRAM. Sleep ${sleep_seconds}s..."
-                sleep "${sleep_seconds}"
-            done
-        }
-
-        wait_for_gpus_ready "${GPU_CSV}" 10
         mkdir -p ~{output_dir}/~{batch_name}/02.bam
         #fq2bam
         pbrun fq2bam \
