@@ -89,27 +89,18 @@ workflow QCpipeline {
 
     Array[File] final_all_vcfs = select_first([flow_hc_workflow.all_vcfs, flow_hc_workflow_2.all_vcfs, start_hc_workflow.all_vcfs])
     Array[File] final_all_tbis = select_first([flow_hc_workflow.all_tbis, flow_hc_workflow_2.all_tbis, start_hc_workflow.all_tbis])
-    call combine.GLnexus as GLnexus {
+
+    call combine.gatk_combine_gvcfs as gatk_combine_gvcfs {
         input:
+            cfg = cfg,
             all_vcfs = final_all_vcfs,
             all_tbis = final_all_tbis,
             output_dir = output_dir,
             batch_name = batch_name
     }
 
-    call combine.combine_gvcfs as combine_gvcfs {
-        input:
-            cfg = cfg,
-            input_bcf_file = GLnexus.gvcf_bcf_file,
-            output_dir = output_dir,
-            batch_name = batch_name
-    }
-
     output {
-        File final_snp_gvcf = combine_gvcfs.combine_gvcf_snp
-        File final_indel_gvcf = combine_gvcfs.combine_gvcf_indel
-        File final_snp_stat = combine_gvcfs.gvcf_stat_snp
-        File final_indel_stat = combine_gvcfs.gvcf_stat_indel
+        File final_snp_gvcf = gatk_combine_gvcfs.cohort_vcf
     }
 }
 

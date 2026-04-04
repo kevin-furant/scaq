@@ -14,4 +14,5 @@ struct Config {
     File snp_stat
     File parallel
     File popSNP_SNPStat
+    File gatk
 }
