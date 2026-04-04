@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{ title }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-area">
+      <img src="static/images/logo.png">
+      <div class="tagline">{{ title }}</div>
+    </div>
+  </div>
+</header>
+
+<div class="page-shell">
+
+<!-- ===== 侧边栏 ===== -->
+<aside class="sidebar">
+
+<div class="nav-group">
+  <div class="nav-header" onclick="location.href='#c1'">1. 背景介绍</div>
+</div>
+
+<div class="nav-group">
+  <div class="nav-header active">
+    2. 生物信息分析 <i class="fa-solid fa-chevron-down arrow"></i>
+  </div>
+  <div class="nav-sub-items" style="display:block;">
+    <a href="#c2_1">2.1 测序数据质控</a>
+    <a href="#c2_2">2.2 参考基因组比对</a>
+    <a href="#c2_3">2.3 SNP 检测</a>
+    <a href="#c2_4">2.4 SNP 注释</a>
+    <a href="#c2_5">2.5 InDel 注释</a>
+  </div>
+</div>
+
+<div class="nav-group">
+  <div class="nav-header" onclick="location.href='#c3'">3. 分析软件列表</div>
+</div>
+
+<div class="nav-group">
+  <div class="nav-header" onclick="location.href='#c4'">4. 参考文献</div>
+</div>
+
+<div class="nav-group">
+  <div class="nav-header">
+    关于我们 <i class="fa-solid fa-chevron-down arrow"></i>
+  </div>
+  <div class="nav-sub-items" style="display:block;">
+    <a href="#c5">关于格致博雅</a>
+    <a href="#c6">联系我们</a>
+  </div>
+</div>
+
+</aside>
+
+<!-- ===== 主体 ===== -->
+<main class="main-content">
+<article class="paper-page">
+
+<h1>{{ title }}</h1>
+
+<!-- 项目信息 -->
+<div class="project-info">
+  <div class="info-row info-row-full">
+    <span class="info-label">项目名称：</span>
+    <span class="info-value project-name">{{ project.name }}</span>
+  </div>
+  <div class="info-row"><span class="info-label">项目编号：</span>{{ project.id }}</div>
+  <div class="info-row"><span class="info-label">物种名称：</span>{{ project.species }}</div>
+  <div class="info-row"><span class="info-label">样本数量：</span>{{ project.sample_count }}</div>
+  <div class="info-row"><span class="info-label">报告时间：</span>{{ project.date }}</div>
+</div>
+
+<!-- 1 -->
+<h2 id="c1">1. 背景介绍</h2>
+<p>{{ background }}</p>
+
+<!-- 2 -->
+<h2 id="c2">2. 生物信息分析</h2>
+
+<!-- 2.1 -->
+<h3 id="c2_1">2.1 测序数据质控</h3>
+<div class="table-section">
+<h4>表1：测序数据质控统计表</h4>
+<table id="qc_table" class="display">
+<tbody>
+{% for r in qc_table %}
+<tr>
+<td>{{ r.sample }}</td><td>{{ r.raw_reads }}</td><td>{{ r.clean_reads }}</td>
+<td>{{ r.raw_data }}</td><td>{{ r.clean_data }}</td><td>{{ r.error_rate }}</td>
+<td>{{ r.q20 }}</td><td>{{ r.q30 }}</td><td>{{ r.gc }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="note-container"><p>{{ qc_desc }}</p></div>
+</div>
+
+<!-- 2.2 -->
+<h3 id="c2_2">2.2 参考基因组比对</h3>
+<div class="table-section">
+<h4>表2：比对结果统计表</h4>
+<table id="map_table" class="display">
+<tbody>
+{% for r in map_table %}
+<tr>
+<td>{{ r.sample }}</td><td>{{ r.clean_reads }}</td><td>{{ r.mapped_reads }}</td>
+<td>{{ r.mapping_rate }}</td><td>{{ r.depth }}</td>
+<td>{{ r.cov1 }}</td><td>{{ r.cov10 }}</td><td>{{ r.cov20 }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="note-container"><p>{{ map_desc }}</p></div>
+</div>
+
+<!-- 2.3 -->
+<h3 id="c2_3">2.3 SNP 检测</h3>
+<p>{{ snp_desc }}</p>
+<div class="figure-box" onclick="zoomPlot('{{ snp_fig.title }}','{{ snp_fig.src }}')">
+<img src="{{ snp_fig.src }}">
+<div class="figure-cap">{{ snp_fig.title }}</div>
+</div>
+<div class="note-container"><p>{{ snp_note }}</p></div>
+
+<!-- 2.4 -->
+<h3 id="c2_4">2.4 SNP 注释</h3>
+<div class="table-section">
+<h4>表3：SNP功能注释统计</h4>
+<table id="snp_scroll_table">
+<tbody>
+{% for r in snp_table %}
+<tr><td>{{ r.name }}</td><td>{{ r.value }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="note-container"><p>{{ snp_table_note }}</p></div>
+</div>
+
+<div class="figure-box" onclick="zoomPlot('{{ snp_plot.title }}','{{ snp_plot.src }}')">
+<img src="{{ snp_plot.src }}">
+<div class="figure-cap">{{ snp_plot.title }}</div>
+</div>
+
+<!-- 2.5 -->
+<h3 id="c2_5">2.5 InDel 注释</h3>
+<div class="table-section">
+<h4>表4：InDel注释统计</h4>
+<table id="indel_scroll_table">
+<tbody>
+{% for r in indel_table %}
+<tr><td>{{ r.name }}</td><td>{{ r.value }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="note-container"><p>{{ indel_table_note }}</p></div>
+</div>
+
+<div class="figure-box" onclick="zoomPlot('{{ indel_plot.title }}','{{ indel_plot.src }}')">
+<img src="{{ indel_plot.src }}">
+<div class="figure-cap">{{ indel_plot.title }}</div>
+</div>
+
+<!-- 3 -->
+<h2 id="c3">3. 生物信息分析软件列表</h2>
+<table class="static-table">
+<tbody>
+{% for s in software %}
+<tr><td>{{ s.name }}</td><td>{{ s.version }}</td><td>{{ s.desc }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<div class="note-container"><p>{{ software_note }}</p></div>
+
+<!-- 4 -->
+<h2 id="c4">4. 参考文献</h2>
+<div class="note-container"><p>{{ ref_note }}</p></div>
+{% for r in refs %}
+<p>{{ r }}</p>
+{% endfor %}
+
+<!-- 5 -->
+<h2 id="c5">5. 关于格致博雅</h2>
+<p>{{ about }}</p>
+
+<!-- 6 -->
+<h2 id="c6">6. 联系我们</h2>
+<div class="note-container" style="text-indent:0;">
+<p><i class="fa-solid fa-map-location-dot"></i> {{ contact.address }}</p>
+<p><i class="fa-solid fa-envelope"></i> {{ contact.email }}</p>
+<p><i class="fa-solid fa-globe"></i> {{ contact.website }}</p>
+</div>
+
+</article>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="static/js/app.js"></script>
+
+</body>
+</html>
