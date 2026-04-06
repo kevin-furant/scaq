@@ -27,7 +27,7 @@ task gatk_combine_gvcfs {
         cp ~{vcf_list_file} ~{output_dir}/~{batch_name}/04.combine/samples.gvcf.list
          ~{gatk} CombineGVCFs \
         -R ~{ref} \
-        -o ~{output_dir}/~{batch_name}/04.combine/~{batch_name}_cohort.g.vcf.gz \
+        -O ~{output_dir}/~{batch_name}/04.combine/~{batch_name}_cohort.g.vcf.gz \
         -V ~{vcf_list_file} 
     >>>
 
