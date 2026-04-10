@@ -144,23 +144,12 @@ workflow aligner_workflow {
                     # Rotate GPU groups when sample count exceeds gpu_ids count.
                     gpu_group = gpu_ids[gpu_idx_2]
             }
-
-            call bam_stat as start_bam_stat {
-                input:
-                    cfg = cfg,
-                    input_bam = start_sample_aligner.out_bam,
-                    input_bai = start_sample_aligner.out_bai,
-                    sample_name = sample_2,
-                    batch_name = batch_name,
-                    output_dir = output_dir
-            }
         }
     }
 
     output {
         Array[File]? all_bams = if (defined(sample_info)) then start_sample_aligner.out_bam else flow_sample_aligner.out_bam
         Array[File]? all_bais = if (defined(sample_info)) then start_sample_aligner.out_bai else flow_sample_aligner.out_bai
-        Array[File]? all_bam_stats = if (defined(sample_info)) then start_bam_stat.bam_stat else flow_bam_stat.bam_stat
         Array[String]? sample_names = if (defined(sample_info)) then key_samples else samples_selected
     }
 }

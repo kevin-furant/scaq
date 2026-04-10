@@ -76,6 +76,46 @@ workflow QCpipeline {
         }
     }
 
+    if (is_qc) {
+        Array[File] all_bams_qc = select_first([flow_aligner_workflow.all_bams])
+        Array[File] all_bais_qc = select_first([flow_aligner_workflow.all_bais])
+        Array[Pair[File, File]] all_bam_bai_pairs_qc = zip(all_bams_qc, all_bais_qc)
+        scatter(bam_bai_pair in all_bam_bai_pairs_qc) {
+            File qc_bam = bam_bai_pair.left
+            File qc_bai = bam_bai_pair.right
+            String qc_sample_name = basename(qc_bam, ".bam")
+            call aligner.bam_stat as qc_bam_stat {
+                input:
+                    cfg = cfg,
+                    input_bam = qc_bam,
+                    input_bai = qc_bai,
+                    sample_name = qc_sample_name,
+                    batch_name = batch_name,
+                    output_dir = output_dir
+            }
+         }
+    }
+
+    if (is_align) {
+        Array[File] all_bams_align = select_first([start_aligner_workflow.all_bams])
+        Array[File] all_bais_align = select_first([start_aligner_workflow.all_bais])
+        Array[Pair[File, File]] all_bam_bai_pairs_align = zip(all_bams_align, all_bais_align)
+        scatter(bam_bai_pair in all_bam_bai_pairs_align) {
+            File align_bam = bam_bai_pair.left
+            File align_bai = bam_bai_pair.right
+            String align_sample_name = basename(align_bam, ".bam")
+            call aligner.bam_stat as align_bam_stat {
+                input:
+                    cfg = cfg,
+                    input_bam = align_bam,
+                    input_bai = align_bai,
+                    sample_name = align_sample_name,
+                    batch_name = batch_name,
+                    output_dir = output_dir
+            }
+         }
+    }
+
     if (is_hc) {
         call hc.hc_workflow as start_hc_workflow {
             input:
@@ -110,6 +150,6 @@ workflow QCpipeline {
         File final_indel_gvcf = combine_gvcfs.combine_gvcf_indel
         File final_snp_stat = combine_gvcfs.gvcf_stat_snp
         File final_indel_stat = combine_gvcfs.gvcf_stat_indel
+        Array[File] all_bam_stats = flatten(select_all([qc_bam_stat.bam_stat, align_bam_stat.bam_stat]))
     }
 }
-
