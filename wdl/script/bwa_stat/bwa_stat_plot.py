@@ -76,23 +76,23 @@ class BwaStatsPlot(object):
             coverage_tmp_dict = {}
             with open(sample_bwa_stat_file, "r") as inf:
                 collect_dict = {
-                        'sequences': None,
-                        'reads paired': None,
-                        'reads mapped': None,
-                        'reads unmapped': None,
-                        'reads duplicated': None,
-                        'total length': None,
-                        'bases mapped': None,
-                        'mismatches': None,
-                        'average length': None,
-                        'pairs on different chromosomes': None
+                        'sequences': "",
+                        'reads paired': "",
+                        'reads mapped': "",
+                        'reads unmapped': "",
+                        'reads duplicated': "",
+                        'total length': "",
+                        'bases mapped': "",
+                        'mismatches': "",
+                        'average length': "",
+                        'pairs on different chromosomes': ""
                 }
                 for each in inf:
                     each = each.strip()
                     line_list = each.split('\t')
                     if each.startswith('SN'):
                         item = line_list[1].replace(':', '').strip()
-                        if collect_dict.get(item) is None:
+                        if collect_dict.get(item) == "":
                             collect_dict[item] = int(line_list[2])
                     elif each.startswith('COV'):
                         cover_dis = line_list[1]
