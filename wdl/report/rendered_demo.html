@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动植物重测序分析项目结题报告（演示）</title>
+  <link rel="stylesheet" href="./static/reseq_variant_report.css">
+</head>
+<body style="--theme-color: #2b4a9a;">
+  <button class="toc-toggle" type="button" id="tocToggle">☰</button>
+  <aside class="toc-sidebar" id="tocSidebar">
+    <h2>目录</h2>
+    <ul>
+      
+      <li>
+        <a href="#background-intro">1. 背景介绍</a>
+        
+      </li>
+      
+      <li>
+        <a href="#bioinfo-analysis">2. 生物信息分析</a>
+        
+        <ul>
+          
+          <li>
+            <a href="#qc">2.1 测序数据质控</a>
+          </li>
+          
+          <li>
+            <a href="#quality-eval">2.2 测序数据质量评估</a>
+          </li>
+          
+          <li>
+            <a href="#mapping">2.3 参考基因组比对</a>
+          </li>
+          
+          <li>
+            <a href="#snp-detect">2.4 SNP 检测</a>
+          </li>
+          
+        </ul>
+        
+      </li>
+      
+      <li>
+        <a href="#software-list">3. 生物信息分析软件列表</a>
+        
+      </li>
+      
+      <li>
+        <a href="#references">4. 参考文献</a>
+        
+      </li>
+      
+      <li>
+        <a href="#about-company">5. 关于格致博雅</a>
+        
+      </li>
+      
+    </ul>
+  </aside>
+
+  <main class="container">
+    <section id="cover" class="page-cover">
+      
+      <img class="company-logo" src="https://dummyimage.com/320x120/2b4a9a/ffffff.png&text=GLBIZZIA+LOGO" alt="cover-logo">
+      
+      <h1 class="cover-title">动植物重测序分析项目结题报告（演示）</h1>
+      <p class="cover-subtitle">Whole Genome Resequencing Variant Detection</p>
+      <div class="cover-company">北京格致博雅生物科技有限公司</div>
+      <div class="cover-meta">2026-04-13 | support@glbizzia.com</div>
+    </section>
+
+    <section id="project-info">
+      <h2>项目信息</h2>
+      <table class="project-table">
+        
+        <tr>
+          <th>项目名称</th>
+          <td>水稻群体重测序变异检测</td>
+        </tr>
+        
+        <tr>
+          <th>项目编号</th>
+          <td>SA2026DEMO001</td>
+        </tr>
+        
+        <tr>
+          <th>物种名称</th>
+          <td>Oryza sativa</td>
+        </tr>
+        
+        <tr>
+          <th>样本数量</th>
+          <td>70 个</td>
+        </tr>
+        
+        <tr>
+          <th>报告时间</th>
+          <td>2026 年 4 月 13 日</td>
+        </tr>
+        
+      </table>
+    </section>
+
+    <section id="background-intro">
+      <h2>1. 背景介绍</h2>
+      
+      <p>变异检测通过高通量测序与参考基因组比对，识别 SNP、InDel 等遗传变异，为育种与功能研究提供数据基础。</p>
+      
+      <p>本演示报告数据为伪造样例，仅用于展示模板渲染效果与字段结构。</p>
+      
+    </section>
+
+    <section id="bioinfo-analysis">
+      <h2>2. 生物信息分析</h2>
+
+      <article id="qc">
+        <h3>2.1 测序数据质控</h3>
+        
+        <p>原始数据经过接头过滤、低质量与高 N 比例序列过滤后得到 clean data。</p>
+        
+        <p>整体数据质量良好，满足后续比对和变异检测分析需求。</p>
+        
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              
+              <th>Sample</th>
+              
+              <th>Raw Base(G)</th>
+              
+              <th>Clean Base(G)</th>
+              
+              <th>Effective Rate(%)</th>
+              
+              <th>Error Rate(%)</th>
+              
+              <th>Q20(%)</th>
+              
+              <th>Q30(%)</th>
+              
+              <th>GC Content(%)</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              
+              <td>Y7</td>
+              
+              <td>26.39</td>
+              
+              <td>26.16</td>
+              
+              <td>99.17</td>
+              
+              <td>0.03</td>
+              
+              <td>97.75</td>
+              
+              <td>93.75</td>
+              
+              <td>43.59</td>
+              
+            </tr>
+            
+            <tr>
+              
+              <td>R8</td>
+              
+              <td>27.50</td>
+              
+              <td>27.26</td>
+              
+              <td>99.13</td>
+              
+              <td>0.03</td>
+              
+              <td>97.81</td>
+              
+              <td>93.97</td>
+              
+              <td>46.10</td>
+              
+            </tr>
+            
+          </tbody>
+        </table>
+        
+      </article>
+
+      <article id="quality-eval">
+        <h3>2.2 测序数据质量评估</h3>
+        
+        <p>测序质量主要分布在 Q30 以上，读长末端质量略有下降，符合常见测序特征。</p>
+        
+        
+        <div class="figure">
+          <img src="https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.1+Quality+Distribution" alt="图2.1 测序质量分布图">
+          <div class="figure-title">图2.1 测序质量分布图</div>
+        </div>
+        
+        <div class="figure">
+          <img src="https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.2+Error+Rate+Distribution" alt="图2.2 测序错误率分布图">
+          <div class="figure-title">图2.2 测序错误率分布图</div>
+        </div>
+        
+      </article>
+
+      <article id="mapping">
+        <h3>2.3 参考基因组比对</h3>
+        
+        <p>高质量 clean data 采用 BWA 比对到参考基因组，样本比对率与覆盖度均达到分析要求。</p>
+        
+        
+        <table class="data-table">
+          <thead>
+            <tr>
+              
+              <th>Sample</th>
+              
+              <th>Total reads</th>
+              
+              <th>Mapped reads</th>
+              
+              <th>Mapping rate</th>
+              
+              <th>Average depth</th>
+              
+              <th>Coverage 1X</th>
+              
+              <th>Coverage 10X</th>
+              
+              <th>Coverage 20X</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              
+              <td>LKY01</td>
+              
+              <td>178360200</td>
+              
+              <td>177536219</td>
+              
+              <td>97.63%</td>
+              
+              <td>10.39</td>
+              
+              <td>82.09%</td>
+              
+              <td>24.03%</td>
+              
+              <td>1.67%</td>
+              
+            </tr>
+            
+            <tr>
+              
+              <td>LKY02</td>
+              
+              <td>173200336</td>
+              
+              <td>171999072</td>
+              
+              <td>97.63%</td>
+              
+              <td>10.10</td>
+              
+              <td>83.14%</td>
+              
+              <td>27.49%</td>
+              
+              <td>2.19%</td>
+              
+            </tr>
+            
+          </tbody>
+        </table>
+        
+      </article>
+
+      <article id="snp-detect">
+        <h3>2.4 SNP 检测</h3>
+        
+        <p>采用 GATK HaplotypeCaller 进行 SNP 检测，再通过联合分型获取全样本 SNP 位点。</p>
+        
+        
+        <div class="figure">
+          <img src="https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.4+SNP+Density" alt="图2.4 SNP 变异密度分布图">
+          <div class="figure-title">图2.4 SNP 变异密度分布图</div>
+        </div>
+        
+      </article>
+
+    </section>
+
+    <section id="software-list">
+      <h2>3. 生物信息分析软件列表</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>软件</th>
+            <th>版本</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>BWA</td>
+            <td>0.7.17-r1188</td>
+            <td>将 NGS 测序数据比对到参考基因组</td>
+          </tr>
+          
+          <tr>
+            <td>SAMTOOLS</td>
+            <td>1.19</td>
+            <td>对 SAM/BAM 文件排序、去重、索引</td>
+          </tr>
+          
+          <tr>
+            <td>GATK</td>
+            <td>4.4.0.0</td>
+            <td>重测序变异检测与联合分型</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </section>
+
+    <section id="references">
+      <h2>4. 参考文献</h2>
+      <ol class="ref-list">
+        
+        <li>Li H, Durbin R. Fast and accurate short read alignment with Burrows-Wheeler transform.</li>
+        
+        <li>Li H. Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM.</li>
+        
+        <li>McKenna A, et al. The Genome Analysis Toolkit: a MapReduce framework for analyzing NGS data.</li>
+        
+      </ol>
+    </section>
+
+    <section id="about-company">
+      <h2>5. 关于格致博雅</h2>
+      <h3>5.1 公司简介</h3>
+      
+      <p>格致博雅专注于动植物多组学测算服务，构建了从样本处理、测序到生信分析的完整技术链。</p>
+      
+      <p>本示例文本为演示用途，非真实对外交付内容。</p>
+      
+      <h3>5.2 联系我们</h3>
+      <div class="footer-contact">
+        <div>北京市大兴区生物医药产业基地联东U谷17号楼</div>
+        <div><a href="http://glbizzia.com/">http://glbizzia.com/</a></div>
+        <div>support@glbizzia.com</div>
+      </div>
+      
+      <p><img class="company-logo" src="https://dummyimage.com/240x80/2b4a9a/ffffff.png&text=GLBIZZIA" alt="footer-logo"></p>
+      
+    </section>
+  </main>
+
+  <script src="./static/reseq_variant_report.js"></script>
+</body>
+</html>

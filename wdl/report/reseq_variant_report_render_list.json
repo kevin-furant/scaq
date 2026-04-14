@@ -1,0 +1,289 @@
+[
+  {
+    "key": "report.title",
+    "type": "string",
+    "required": true,
+    "description": "报告主标题",
+    "example": "动植物重测序分析项目结题报告"
+  },
+  {
+    "key": "report.subtitle",
+    "type": "string",
+    "required": true,
+    "description": "报告副标题",
+    "example": "Whole Genome Resequencing Variant Detection"
+  },
+  {
+    "key": "report.report_date",
+    "type": "string",
+    "required": true,
+    "description": "报告日期文本",
+    "example": "2026-04-13"
+  },
+  {
+    "key": "assets.css_url",
+    "type": "string",
+    "required": false,
+    "description": "模板引用的 CSS 资源路径，不传则使用默认 ./static/reseq_variant_report.css",
+    "example": "./static/reseq_variant_report.css"
+  },
+  {
+    "key": "assets.js_url",
+    "type": "string",
+    "required": false,
+    "description": "模板引用的 JS 资源路径，不传则使用默认 ./static/reseq_variant_report.js",
+    "example": "./static/reseq_variant_report.js"
+  },
+  {
+    "key": "branding.theme_color",
+    "type": "string",
+    "required": false,
+    "description": "主题色（CSS 色值）",
+    "example": "#2b4a9a"
+  },
+  {
+    "key": "branding.cover_logo_url",
+    "type": "string",
+    "required": false,
+    "description": "封面公司 Logo 地址或本地路径",
+    "example": "assets/company-logo.png"
+  },
+  {
+    "key": "branding.footer_logo_url",
+    "type": "string",
+    "required": false,
+    "description": "页尾 Logo 地址或本地路径",
+    "example": "assets/footer-logo.png"
+  },
+  {
+    "key": "company.name",
+    "type": "string",
+    "required": true,
+    "description": "公司全称",
+    "example": "北京格致博雅生物科技有限公司"
+  },
+  {
+    "key": "company.short_name",
+    "type": "string",
+    "required": true,
+    "description": "公司简称",
+    "example": "格致博雅"
+  },
+  {
+    "key": "company.address",
+    "type": "string",
+    "required": true,
+    "description": "联系地址",
+    "example": "北京市大兴区生物医药产业基地联东U谷17号楼"
+  },
+  {
+    "key": "company.website",
+    "type": "string",
+    "required": true,
+    "description": "官网 URL",
+    "example": "http://glbizzia.com/"
+  },
+  {
+    "key": "company.email",
+    "type": "string",
+    "required": true,
+    "description": "联系邮箱",
+    "example": "support@glbizzia.com"
+  },
+  {
+    "key": "toc[]",
+    "type": "array<object>",
+    "required": true,
+    "description": "目录侧边栏列表（隐藏在左侧，支持 children 子列表展示小节）",
+    "example": [
+      {
+        "number": "1.",
+        "title": "背景介绍",
+        "anchor": "background-intro"
+      },
+      {
+        "number": "2.",
+        "title": "生物信息分析",
+        "anchor": "bioinfo-analysis",
+        "children": [
+          {
+            "number": "2.1",
+            "title": "测序数据质控",
+            "anchor": "qc"
+          },
+          {
+            "number": "2.2",
+            "title": "测序数据质量评估",
+            "anchor": "quality-eval"
+          },
+          {
+            "number": "2.3",
+            "title": "参考基因组比对",
+            "anchor": "mapping"
+          },
+          {
+            "number": "2.4",
+            "title": "SNP 检测",
+            "anchor": "snp-detect"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "project_info[]",
+    "type": "array<object>",
+    "required": true,
+    "description": "项目信息表格",
+    "example": [
+      {
+        "label": "项目名称",
+        "value": "XXXXXX"
+      },
+      {
+        "label": "项目编号",
+        "value": "SA2026XXXX"
+      }
+    ]
+  },
+  {
+    "key": "sections.background.paragraphs[]",
+    "type": "array<string>",
+    "required": true,
+    "description": "1 背景介绍段落列表",
+    "example": [
+      "变异检测是一种生物信息学方法......"
+    ]
+  },
+  {
+    "key": "sections.bioinfo.qc",
+    "type": "object",
+    "required": true,
+    "description": "2.1 测序数据质控",
+    "example": {
+      "paragraphs": [
+        "DNBSEQ-T7 平台执行高通量测序......"
+      ],
+      "table": {
+        "headers": [
+          "测序错误率",
+          "测序质量值"
+        ],
+        "rows": [
+          [
+            "5%",
+            "13"
+          ],
+          [
+            "1%",
+            "20"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "key": "sections.bioinfo.quality_eval",
+    "type": "object",
+    "required": true,
+    "description": "2.2 测序数据质量评估（模板中不包含注释字段）",
+    "example": {
+      "paragraphs": [
+        "测序数据的质量主要分布在 Q30 以上......"
+      ],
+      "figures": [
+        {
+          "title": "图2.1 测序质量分布图",
+          "image_url": "assets/figure-2-1.png"
+        },
+        {
+          "title": "图2.2 测序错误率分布图",
+          "image_url": "assets/figure-2-2.png"
+        }
+      ]
+    }
+  },
+  {
+    "key": "sections.bioinfo.mapping",
+    "type": "object",
+    "required": true,
+    "description": "2.3 参考基因组比对",
+    "example": {
+      "paragraphs": [
+        "有效的高质量测序数据通过 BWA 软件比对到参考基因组......"
+      ],
+      "table": {
+        "headers": [
+          "Sample",
+          "Total reads",
+          "Mapped reads",
+          "Mapping rate",
+          "Average depth",
+          "Coverage 1X",
+          "Coverage 10X",
+          "Coverage 20X"
+        ],
+        "rows": [
+          [
+            "LKY01",
+            "178360200",
+            "177536219",
+            "97.63%",
+            "10.39",
+            "82.09%",
+            "24.03%",
+            "1.67%"
+          ]
+        ]
+      }
+    }
+  },
+  {
+    "key": "sections.bioinfo.snp_detect",
+    "type": "object",
+    "required": true,
+    "description": "2.4 SNP 检测",
+    "example": {
+      "paragraphs": [
+        "SNP 主要是指在基因组水平上由单个核苷酸变异引起的 DNA 多态性......"
+      ],
+      "figures": [
+        {
+          "title": "图2.4 SNP变异密度分布图",
+          "image_url": "assets/figure-2-4.png"
+        }
+      ]
+    }
+  },
+  {
+    "key": "sections.software_list[]",
+    "type": "array<object>",
+    "required": true,
+    "description": "3 生信分析软件列表",
+    "example": [
+      {
+        "name": "BWA",
+        "version": "0.7.17-r1188",
+        "description": "将 NGS 测序数据比对到参考基因组"
+      }
+    ]
+  },
+  {
+    "key": "sections.references[]",
+    "type": "array<string>",
+    "required": true,
+    "description": "4 参考文献列表",
+    "example": [
+      "Li H, Durbin R: Fast and accurate short read alignment with Burrows-Wheeler transform."
+    ]
+  },
+  {
+    "key": "sections.about.company_intro[]",
+    "type": "array<string>",
+    "required": true,
+    "description": "5.1 公司简介段落",
+    "example": [
+      "北京格致博雅生物科技有限公司是国内领先的高通量测序和生物信息学技术研发企业......"
+    ]
+  }
+]

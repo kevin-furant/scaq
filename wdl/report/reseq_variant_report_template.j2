@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ report.title }}</title>
+  <link rel="stylesheet" href="{{ assets.css_url | default('./static/reseq_variant_report.css') }}">
+</head>
+<body style="--theme-color: {{ branding.theme_color | default('#2b4a9a') }};">
+  <button class="toc-toggle" type="button" id="tocToggle">☰</button>
+  <aside class="toc-sidebar" id="tocSidebar">
+    <h2>目录</h2>
+    <ul>
+      {% for item in toc %}
+      <li>
+        <a href="#{{ item.anchor }}">{{ item.number }} {{ item.title }}</a>
+        {% if item.children %}
+        <ul>
+          {% for sub in item.children %}
+          <li>
+            <a href="#{{ sub.anchor }}">{{ sub.number }} {{ sub.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <main class="container">
+    <section id="cover" class="page-cover">
+      {% if branding.cover_logo_url %}
+      <img class="company-logo" src="{{ branding.cover_logo_url }}" alt="cover-logo">
+      {% endif %}
+      <h1 class="cover-title">{{ report.title }}</h1>
+      <p class="cover-subtitle">{{ report.subtitle }}</p>
+      <div class="cover-company">{{ company.name }}</div>
+      <div class="cover-meta">{{ report.report_date }} | {{ company.email }}</div>
+    </section>
+
+    <section id="project-info">
+      <h2>项目信息</h2>
+      <table class="project-table">
+        {% for row in project_info %}
+        <tr>
+          <th>{{ row.label }}</th>
+          <td>{{ row.value }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </section>
+
+    <section id="background-intro">
+      <h2>1. 背景介绍</h2>
+      {% for para in sections.background.paragraphs %}
+      <p>{{ para }}</p>
+      {% endfor %}
+    </section>
+
+    <section id="bioinfo-analysis">
+      <h2>2. 生物信息分析</h2>
+
+      <article id="qc">
+        <h3>2.1 测序数据质控</h3>
+        {% for para in sections.bioinfo.qc.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+        {% if sections.bioinfo.qc.table %}
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for h in sections.bioinfo.qc.table.headers %}
+              <th>{{ h }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in sections.bioinfo.qc.table.rows %}
+            <tr>
+              {% for cell in row %}
+              <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </article>
+
+      <article id="quality-eval">
+        <h3>2.2 测序数据质量评估</h3>
+        {% for para in sections.bioinfo.quality_eval.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+        {% for fig in sections.bioinfo.quality_eval.figures %}
+        <div class="figure">
+          <img src="{{ fig.image_url }}" alt="{{ fig.title }}">
+          <div class="figure-title">{{ fig.title }}</div>
+        </div>
+        {% endfor %}
+      </article>
+
+      <article id="mapping">
+        <h3>2.3 参考基因组比对</h3>
+        {% for para in sections.bioinfo.mapping.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+        {% if sections.bioinfo.mapping.table %}
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for h in sections.bioinfo.mapping.table.headers %}
+              <th>{{ h }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in sections.bioinfo.mapping.table.rows %}
+            <tr>
+              {% for cell in row %}
+              <td>{{ cell }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </article>
+
+      <article id="snp-detect">
+        <h3>2.4 SNP 检测</h3>
+        {% for para in sections.bioinfo.snp_detect.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+        {% for fig in sections.bioinfo.snp_detect.figures %}
+        <div class="figure">
+          <img src="{{ fig.image_url }}" alt="{{ fig.title }}">
+          <div class="figure-title">{{ fig.title }}</div>
+        </div>
+        {% endfor %}
+      </article>
+
+    </section>
+
+    <section id="software-list">
+      <h2>3. 生物信息分析软件列表</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>软件</th>
+            <th>版本</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in sections.software_list %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.version }}</td>
+            <td>{{ item.description }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="references">
+      <h2>4. 参考文献</h2>
+      <ol class="ref-list">
+        {% for ref in sections.references %}
+        <li>{{ ref }}</li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section id="about-company">
+      <h2>5. 关于{{ company.short_name }}</h2>
+      <h3>5.1 公司简介</h3>
+      {% for para in sections.about.company_intro %}
+      <p>{{ para }}</p>
+      {% endfor %}
+      <h3>5.2 联系我们</h3>
+      <div class="footer-contact">
+        <div>{{ company.address }}</div>
+        <div><a href="{{ company.website }}">{{ company.website }}</a></div>
+        <div>{{ company.email }}</div>
+      </div>
+      {% if branding.footer_logo_url %}
+      <p><img class="company-logo" src="{{ branding.footer_logo_url }}" alt="footer-logo"></p>
+      {% endif %}
+    </section>
+  </main>
+
+  <script src="{{ assets.js_url | default('./static/reseq_variant_report.js') }}"></script>
+</body>
+</html>
