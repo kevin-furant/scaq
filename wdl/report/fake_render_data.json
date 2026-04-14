@@ -1,0 +1,239 @@
+{
+  "assets": {
+    "css_url": "./static/reseq_variant_report.css",
+    "js_url": "./static/reseq_variant_report.js"
+  },
+  "branding": {
+    "theme_color": "#2b4a9a",
+    "cover_logo_url": "https://dummyimage.com/320x120/2b4a9a/ffffff.png&text=GLBIZZIA+LOGO",
+    "footer_logo_url": "https://dummyimage.com/240x80/2b4a9a/ffffff.png&text=GLBIZZIA"
+  },
+  "report": {
+    "title": "动植物重测序分析项目结题报告（演示）",
+    "subtitle": "Whole Genome Resequencing Variant Detection",
+    "report_date": "2026-04-13"
+  },
+  "company": {
+    "name": "北京格致博雅生物科技有限公司",
+    "short_name": "格致博雅",
+    "address": "北京市大兴区生物医药产业基地联东U谷17号楼",
+    "website": "http://glbizzia.com/",
+    "email": "support@glbizzia.com"
+  },
+  "toc": [
+    {
+      "number": "1.",
+      "title": "背景介绍",
+      "anchor": "background-intro"
+    },
+    {
+      "number": "2.",
+      "title": "生物信息分析",
+      "anchor": "bioinfo-analysis",
+      "children": [
+        {
+          "number": "2.1",
+          "title": "测序数据质控",
+          "anchor": "qc"
+        },
+        {
+          "number": "2.2",
+          "title": "测序数据质量评估",
+          "anchor": "quality-eval"
+        },
+        {
+          "number": "2.3",
+          "title": "参考基因组比对",
+          "anchor": "mapping"
+        },
+        {
+          "number": "2.4",
+          "title": "SNP 检测",
+          "anchor": "snp-detect"
+        }
+      ]
+    },
+    {
+      "number": "3.",
+      "title": "生物信息分析软件列表",
+      "anchor": "software-list"
+    },
+    {
+      "number": "4.",
+      "title": "参考文献",
+      "anchor": "references"
+    },
+    {
+      "number": "5.",
+      "title": "关于格致博雅",
+      "anchor": "about-company"
+    }
+  ],
+  "project_info": [
+    {
+      "label": "项目名称",
+      "value": "水稻群体重测序变异检测"
+    },
+    {
+      "label": "项目编号",
+      "value": "SA2026DEMO001"
+    },
+    {
+      "label": "物种名称",
+      "value": "Oryza sativa"
+    },
+    {
+      "label": "样本数量",
+      "value": "70 个"
+    },
+    {
+      "label": "报告时间",
+      "value": "2026 年 4 月 13 日"
+    }
+  ],
+  "sections": {
+    "background": {
+      "paragraphs": [
+        "变异检测通过高通量测序与参考基因组比对，识别 SNP、InDel 等遗传变异，为育种与功能研究提供数据基础。",
+        "本演示报告数据为伪造样例，仅用于展示模板渲染效果与字段结构。"
+      ]
+    },
+    "bioinfo": {
+      "qc": {
+        "paragraphs": [
+          "原始数据经过接头过滤、低质量与高 N 比例序列过滤后得到 clean data。",
+          "整体数据质量良好，满足后续比对和变异检测分析需求。"
+        ],
+        "table": {
+          "headers": [
+            "Sample",
+            "Raw Base(G)",
+            "Clean Base(G)",
+            "Effective Rate(%)",
+            "Error Rate(%)",
+            "Q20(%)",
+            "Q30(%)",
+            "GC Content(%)"
+          ],
+          "rows": [
+            [
+              "Y7",
+              "26.39",
+              "26.16",
+              "99.17",
+              "0.03",
+              "97.75",
+              "93.75",
+              "43.59"
+            ],
+            [
+              "R8",
+              "27.50",
+              "27.26",
+              "99.13",
+              "0.03",
+              "97.81",
+              "93.97",
+              "46.10"
+            ]
+          ]
+        }
+      },
+      "quality_eval": {
+        "paragraphs": [
+          "测序质量主要分布在 Q30 以上，读长末端质量略有下降，符合常见测序特征。"
+        ],
+        "figures": [
+          {
+            "title": "图2.1 测序质量分布图",
+            "image_url": "https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.1+Quality+Distribution"
+          },
+          {
+            "title": "图2.2 测序错误率分布图",
+            "image_url": "https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.2+Error+Rate+Distribution"
+          }
+        ]
+      },
+      "mapping": {
+        "paragraphs": [
+          "高质量 clean data 采用 BWA 比对到参考基因组，样本比对率与覆盖度均达到分析要求。"
+        ],
+        "table": {
+          "headers": [
+            "Sample",
+            "Total reads",
+            "Mapped reads",
+            "Mapping rate",
+            "Average depth",
+            "Coverage 1X",
+            "Coverage 10X",
+            "Coverage 20X"
+          ],
+          "rows": [
+            [
+              "LKY01",
+              "178360200",
+              "177536219",
+              "97.63%",
+              "10.39",
+              "82.09%",
+              "24.03%",
+              "1.67%"
+            ],
+            [
+              "LKY02",
+              "173200336",
+              "171999072",
+              "97.63%",
+              "10.10",
+              "83.14%",
+              "27.49%",
+              "2.19%"
+            ]
+          ]
+        }
+      },
+      "snp_detect": {
+        "paragraphs": [
+          "采用 GATK HaplotypeCaller 进行 SNP 检测，再通过联合分型获取全样本 SNP 位点。"
+        ],
+        "figures": [
+          {
+            "title": "图2.4 SNP 变异密度分布图",
+            "image_url": "https://dummyimage.com/960x420/e5e7eb/111827.png&text=Figure+2.4+SNP+Density"
+          }
+        ]
+      }
+    },
+    "software_list": [
+      {
+        "name": "BWA",
+        "version": "0.7.17-r1188",
+        "description": "将 NGS 测序数据比对到参考基因组"
+      },
+      {
+        "name": "SAMTOOLS",
+        "version": "1.19",
+        "description": "对 SAM/BAM 文件排序、去重、索引"
+      },
+      {
+        "name": "GATK",
+        "version": "4.4.0.0",
+        "description": "重测序变异检测与联合分型"
+      }
+    ],
+    "references": [
+      "Li H, Durbin R. Fast and accurate short read alignment with Burrows-Wheeler transform.",
+      "Li H. Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM.",
+      "McKenna A, et al. The Genome Analysis Toolkit: a MapReduce framework for analyzing NGS data.",
+      "Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R: The Sequence Alignment/Map format and SAMtools. Bioinformatics 2009, 25(16):2078-2079",
+      "Li, H. A statistical framework for SNP calling, mutation discovery, association mapping and population genetical parameter estimation from sequencing data. Bioinformatics 27, 2987-93 (2011)."
+    ],
+    "about": {
+      "company_intro": [
+        "格致博雅专注于动植物多组学测算服务，构建了从样本处理、测序到生信分析的完整技术链。",
+        "本示例文本为演示用途，非真实对外交付内容。"
+      ]
+    }
+  }
+}
