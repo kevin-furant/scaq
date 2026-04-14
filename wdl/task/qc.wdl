@@ -14,6 +14,7 @@ task sample_qc {
 
     runtime {
         cpu: 2
+        maxRetries: 3
     }
     
     File fastp = cfg.fastp
@@ -54,6 +55,7 @@ task qc_stat {
 
     runtime {
         cpu: 1
+        maxRetries: 3
     }
 
     command <<<

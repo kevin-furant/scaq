@@ -20,6 +20,7 @@ task sample_aligner {
         cpu: 8
         image: "parabricks.4.6.sif"
         cuda_visible_devices: sep(",", gpu_group)
+        maxRetries: 3
     }
 
     command <<<
@@ -61,6 +62,7 @@ task bam_stat {
 
     runtime {
         cpu: 8
+        maxRetries: 3
     }
 
     command <<<
@@ -76,6 +78,38 @@ task bam_stat {
         File bam_stat = "~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam.stat"
     }
 }
+
+task stat_plot {
+    input {
+        Config cfg
+        Array[File] bam_stats
+        String output_dir
+        String batch_name
+    }
+
+    File python = cfg.py
+    Int  genome_length = cfg.genome_length
+    String module_path = cfg.module_path
+
+    runtime {
+        cpu: 8
+        maxRetries: 3
+    }
+
+    command <<<
+        #!/bin/bash
+        set -euo pipefail
+        mkdir -p ~{output_dir}/~{batch_name}/05.result
+        export PYTHONPATH=~{module_path}
+        ~{python} -m bwa_stat -i ~{output_dir}/~{batch_name}/02.bam -o ~{output_dir}/~{batch_name}/05.result -g ~{genome_length}
+    >>>
+
+    output {
+        File bwa_result_tsv = "~{output_dir}/~{batch_name}/05.result/bwa_result.tsv"
+        File bwa_result_plot = "~{output_dir}/~{batch_name}/05.result/BWA_QC_boxplots.pdf"
+    }
+}
+
 
 workflow aligner_workflow {
     input {

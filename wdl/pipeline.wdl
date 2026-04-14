@@ -94,6 +94,13 @@ workflow QCpipeline {
                     output_dir = output_dir
             }
          }
+         call aligner.stat_plot as qc_stat_plot {
+            input:
+                cfg = cfg,
+                input_bam_stats = qc_bam_stat.bam_stat,
+                output_dir = output_dir,
+                batch_name = batch_name
+         }
     }
 
     if (is_align) {
@@ -114,6 +121,13 @@ workflow QCpipeline {
                     output_dir = output_dir
             }
          }
+        call aligner.stat_plot as align_stat_plot {
+            input:
+                cfg = cfg,
+                input_bam_stats = align_bam_stat.bam_stat,
+                output_dir = output_dir,
+                batch_name = batch_name
+        }
     }
 
     if (is_hc) {

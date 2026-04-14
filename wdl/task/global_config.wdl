@@ -14,4 +14,6 @@ struct Config {
     File snp_stat
     File parallel
     File popSNP_SNPStat
+    Int genome_length
+    String module_path
 }
