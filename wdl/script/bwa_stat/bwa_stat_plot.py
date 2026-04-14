@@ -120,10 +120,10 @@ class BwaStatsPlot(object):
                         cov_base += 0
                 cov_rate = '%.2f%s' % (round(cov_base/self.genome_length*100, 2), '%')
                 coverage_list.append(cov_rate)
-            _df = pd.DataFrame(dict(zip(column_names, 
-                                        [sample_name, Clean_reads, Clean_bases, 
-                                        mapped_reads, mapped_bases, mismatch_bases, 
-                                        mapping_rate, mismatch_rate, average_depth] + coverage_list)))
+            data_row = [sample_name, Clean_reads, Clean_bases, 
+                        mapped_reads, mapped_bases, mismatch_bases, 
+                        mapping_rate, mismatch_rate, average_depth] + coverage_list
+            _df = pd.DataFrame([data_row], columns=column_names)
             df = pd.concat([df, _df], ignore_index=True)
         self.df = df
         return df
