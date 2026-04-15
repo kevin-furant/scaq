@@ -88,7 +88,7 @@ task stat_plot {
     }
 
     File python = cfg.py
-    Int  genome_length = cfg.genome_length
+    String  genome_length = cfg.genome_length
     String module_path = cfg.module_path
 
     runtime {
