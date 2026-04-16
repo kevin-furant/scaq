@@ -35,6 +35,7 @@ task sample_aligner {
             --in-fq ~{clean_r1} ~{clean_r2} \
             "@RG\\tID:~{sample_name}\\tLB:~{sample_name}\\tPL:~{sample_name}\\tSM:~{sample_name}\\tPU:~{sample_name}" \
             --out-bam ~{output_dir}/~{batch_name}/02.bam/~{sample_name}.bam \
+            --bwa-cpu-thread-pool 12 \
             --num-gpus "${NUM_GPUS}"
         #samtools stat
         # samtools stat --coverage 1,30,1 -@ 20 \
